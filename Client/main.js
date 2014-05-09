@@ -10,17 +10,16 @@ myHue = {
 
 buttonSwitch = function (e, num) {
  
-			var thisButton = e.currentTarget;
-			var switchVal = $(thisButton).attr('value');
-
+    var thisButton = e.currentTarget;
+	var switchVal = $(thisButton).attr('value');
 			
-			if (switchVal == "true") {
-				lightSwitch(num, true, 200);
-				$(thisButton).attr('value','false');
-			} else if (switchVal == "false") {
-				lightSwitch(num, false, undefined);
-				$(thisButton).attr('value','true');
-			};       
+    if (switchVal == true) {
+	   //lightSwitch(num, true, 200);
+		//$(thisButton).attr('value',true,200);
+	} else if (switchVal == false) {
+		//lightSwitch(num, false, 0);
+		//$(thisButton).attr('value',true,100);
+	};       
 };
 
 lightSwitch = function (lightNum, lightSwitchBool, brightness) {
