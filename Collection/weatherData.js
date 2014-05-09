@@ -1,0 +1,1 @@
+Weather = new Meteor.Collection("weather");
