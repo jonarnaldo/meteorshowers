@@ -1,5 +1,5 @@
-//Global Variables
-var test
+//Global Variables added
+
 myHue = {
     username: "newdeveloper",
     ip: "10.0.1.24",
