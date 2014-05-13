@@ -1,9 +1,21 @@
 <template name="weather">
 
-    <div class="container">
-        <div class="row">
-            <div class="forecast"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6 text-center">
+             <h3>Today</h3>
+            <div class="row">
+                <div class="col-xs-12">
+                     <h1>80-65</h1>
+                </div>
+            </div>
         </div>
+        <div class="col-xs-3"></div>
     </div>
+    <div class="row text-center" id="lookAhead">
+        {{> lookAhead}}
+    </div>
+</div>
 
 </template>
