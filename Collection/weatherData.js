@@ -1,1 +1,2 @@
-Weather = new Meteor.Collection("weather");
+Current = new Meteor.Collection("current");
+Future = new Meteor.Collection("future");

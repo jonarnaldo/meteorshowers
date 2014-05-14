@@ -39,20 +39,46 @@ Forecast = {
 	getLatestWeather: function (latitude, longitude) {
     var apiKey = "d1d066174bbcfed66db995ace8e1b671";
     var url = "https://api.forecast.io/forecast/" + apiKey + "/" + latitude + "," + longitude + "?callback=?";
+            
+    var getCurrentDay = function (unix) {
+      var currentDateArr = new Date(unix * 1000).toDateString().split(" ");
+      return currentDateArr[0];
+    };
 
+    var round = function (num) { 
+      return Math.round(num);  
+    };
 
     $.getJSON(url, function (data) {
         var current = data.currently;
-        Weather.insert({
-        		apparentTemperature: current.apparentTemperature,
-        		humidity: current.humidity,
+        var daily = data.daily.data;
+
+        
+         Current.insert({
+        		apparentTemperature: round(current.apparentTemperature),
         		icon: current.icon,
-        		pressure: current.pressure,
         		summary: current.summary,
-        		temperature: current.temperature,
-        		windSpeed: current.windSpeed
         });
+
+        for (var i = 1; i < 5; i++) {
+          Future.insert({
+            day: getCurrentDay(daily[i].time),
+            icon: daily[i].icon,
+            temperatureMin: round(daily[i].temperatureMin),
+            temperatureMax: round(daily[i].temperatureMax)
+          });
+        }    
     });
 	}
 };
+
+Meteor.methods({
+
+    removeAllData: function () {
+        return Current.remove({}),Future.remove({});
+    },
+});
+
+
+
 
