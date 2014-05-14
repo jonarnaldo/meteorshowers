@@ -1,10 +1,4 @@
 if (Meteor.isClient) {
-	Template.weather.helpers({
-		current: function () {
-			return Current.find();
-		}
-	})
-
 	Template.weather.events({
 		'click .btn': function (){
 			Meteor.call('removeAllData')

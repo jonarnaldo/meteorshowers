@@ -1,28 +1,15 @@
 <template name="weather">
-
-<div class="container">
+  <div class="container">
     <div class="row">
-        <div class="col-xs-3"></div>
-        <div class="col-xs-6 text-center">
-   	        <button type="button" class="btn btn-default">refresh</button>        
-
-             <h1>Today</h1>
-            <div class="row">
-                <div class="col-xs-12">
-                     <h1>
-                     	{{#each current}}
-                            <div id="{{icon}}"><img src="{{icon}}.jpg"></div>
-                     		{{apparentTemperature}} °F
-                     	{{/each}}
-                     </h1>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-3"></div>
+      <div class="col-xs-3"></div>
+      <div class="col-xs-6 text-center">
+        <button type="button" class="btn btn-default">refresh</button>        
+        {{> today}}
+      </div>
+      <div class="col-xs-3"></div>
     </div>
     <div class="row text-center" id="lookAhead">
-        {{> lookAhead}}
+      {{> lookAhead}}
     </div>
-</div>
-
+  </div>
 </template>

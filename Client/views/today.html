@@ -1,0 +1,16 @@
+<template name="today">
+  <div class="col-xs-12 animated bounceInUp">
+    <h1>Today</h1>
+    <div class="row">
+     <div class="col-xs-12">
+      <h1>
+      {{#each current}}
+        <div id="{{icon}}"><img src="{{icon}}.jpg"></div>
+        {{apparentTemperature}} °F
+      {{/each}}
+      </h1>
+     </div>
+    </div>    
+  </div>
+  
+</template>
