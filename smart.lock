@@ -3,7 +3,8 @@
   "dependencies": {
     "basePackages": {
       "bootstrap-3": {},
-      "iron-router": {}
+      "iron-router": {},
+      "jquery-color-animation": {}
     },
     "packages": {
       "bootstrap-3": {
@@ -15,6 +16,11 @@
         "git": "https://github.com/EventedMind/iron-router.git",
         "tag": "v0.7.1",
         "commit": "d1ffb3f06ea4c112132b030f2eb1a70b81675ecb"
+      },
+      "jquery-color-animation": {
+        "git": "https://github.com/jonjamz/meteor-jquery-color-animation.git",
+        "tag": "v1.6.0",
+        "commit": "1999252f73e0d93067a44f46d476539922152e2e"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

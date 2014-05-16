@@ -74,10 +74,23 @@ Forecast = {
 
 Meteor.methods({
 
-    removeAllData: function () {
-        return Current.remove({}),Future.remove({});
-    },
+  removeAllData: function () {
+    return Current.remove({}),Future.remove({});
+  },
+
+  /*randomMeteor: function() {  
+    var windowWidth = $(document).width();
+    var randomLeftstart = Math.floor(Math.random()*windowWidth-100);
+    var randomLeftend = randomLeftstart + 100;
+   
+    $('.shower').css({ top: '-20px', left: randomLeftstart, backgroundColor: 'black'});
+    $('.shower').animate({ top: '110px', left: randomLeftend, backgroundColor: 'white' },400);
+  }*/
 });
+
+
+
+
 
 
 

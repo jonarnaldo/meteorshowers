@@ -5,12 +5,16 @@
      <div class="col-xs-12">
       <h1>
       {{#each current}}
-        <div id="{{icon}}"><img src="{{icon}}.jpg"></div>
-        {{apparentTemperature}} °F
+        <div class="col-xs-9">
+          <div class="row">San Francisco, CA 94107</div>
+          <div class="row">{{apparentTemperature}} °F {{summary}}</div>
+        </div>        
+        <div class="col-xs-3">
+          <div id="{{icon}}"><img src="{{icon}}.jpg"></div>
+        </div>
       {{/each}}
       </h1>
      </div>
     </div>    
   </div>
-  
 </template>
