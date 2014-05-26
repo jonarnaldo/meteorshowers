@@ -10,3 +10,5 @@ bootstrap-3
 iron-router
 jquery
 jquery-color-animation
+jquery-ui-bootstrap
+jquery-ui

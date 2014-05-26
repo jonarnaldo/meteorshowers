@@ -6,11 +6,15 @@
       <h1>
       {{#each current}}
         <div class="col-xs-9">
-          <div class="row"><h1>San Francisco, CA 94107</h1></div>
-          <div class="row">{{apparentTemperature}} °F {{summary}}</div>
+          <div class="col-xs-8">
+            <div class="row"><h1>{{cityStateZip}}</h1></div>
+            <div class="row">{{apparentTemperature}} °F {{summary}}</div>
+          </div>
+          <div class="col-xs-4">
+            <div id="{{icon}}"><img src="{{icon}}.gif"></div>
+          </div>
         </div>        
         <div class="col-xs-3">
-          <div id="{{icon}}"><img src="{{icon}}.jpg"></div>
         </div>
       {{/each}}
       </h1>

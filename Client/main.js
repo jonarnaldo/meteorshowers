@@ -1,12 +1,33 @@
+Address = {
+  display_name: "",
+  cityStateZip: "",
+  zipcode: "999999",
+  lat: 37.785745,
+  lon: -122.395849
+};
+
+GoogleReverseLookup = {
+  setAddress: function () {
+    var APIkey =  "AIzaSyDb7R_MQT2cX6vHsbFRoweKMiM9KvocxWM",
+    URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + Address.lat + "," + Address.lon + "&sensor=true_or_false&key=";
+
+    $.getJSON(URL + APIkey, function(data) {
+        console.log(data);
+        Address.cityStateZip = data.results[data.results.length-5].formatted_address;
+      });
+  }
+};
+
 myHue = {
     username: "newdeveloper",
     ip: "10.0.1.24",
     id: "001788fffe11e541",
     macAddress: "00:17:88:11:e5:41",
+    
     lightSwitch: function (lightNum, onOff) {
 	    var url = 'http://' + myHue.ip + '/api/' + myHue.username + '/lights/' + lightNum + '/state';
 	    var params = {
-	        on: onOff,
+	        on: true,
 	    };
 
 	    $.ajax({
@@ -54,14 +75,15 @@ Forecast = {
         var daily = data.daily.data;
 
         
-         Current.insert({
+         Current.insert({ //refactor to .update instead of .insert
+            cityStateZip: Address.cityStateZip,
         		apparentTemperature: round(current.apparentTemperature),
         		icon: current.icon,
         		summary: current.summary,
         });
 
         for (var i = 1; i < 5; i++) {
-          Future.insert({
+          Future.insert({  //refactor to .update instead of .insert
             day: getCurrentDay(daily[i].time),
             icon: daily[i].icon,
             temperatureMin: round(daily[i].temperatureMin),
@@ -74,24 +96,7 @@ Forecast = {
 
 Meteor.methods({
 
-  removeAllData: function () {
-    return Current.remove({}),Future.remove({});
+  updateData: function () {
+    return Current.remove({}),Future.remove({}); //refactor to .update instead of remove
   },
-
-  /*randomMeteor: function() {  
-    var windowWidth = $(document).width();
-    var randomLeftstart = Math.floor(Math.random()*windowWidth-100);
-    var randomLeftend = randomLeftstart + 100;
-   
-    $('.shower').css({ top: '-20px', left: randomLeftstart, backgroundColor: 'black'});
-    $('.shower').animate({ top: '110px', left: randomLeftend, backgroundColor: 'white' },400);
-  }*/
 });
-
-
-
-
-
-
-
-
