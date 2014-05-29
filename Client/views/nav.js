@@ -13,7 +13,7 @@ if (Meteor.isClient) {
   $(function () {
     $('#input').autocomplete({
       source: function (request, response) {
-        jQuery.getJSON(baseURL + request.term, function (data) {
+        $.getJSON(baseURL + request.term, function (data) {
           for (var i = 0; i < data.length; i++) {
             searchRes[i] = data[i];
             dataArr.push(data[i].display_name);
@@ -26,7 +26,7 @@ if (Meteor.isClient) {
       minLength: 1,
       select: function (event, ui) {
         var selectedObj = ui.item;
-        jQuery('#input').val(selectedObj.label);
+        $('#input').val(selectedObj.label);
         Address.display_name = ui.item.label;
         
 
@@ -42,7 +42,7 @@ if (Meteor.isClient) {
 
         console.log("address: " + Address.display_name + ", lat: " + Address.lat + ", lon: " + Address.lon);
         Session.set('lat', Address.lat);
-        Session.set('lon', Address.lon)
+        Session.set('lon', Address.lon);
         Meteor.call('updateData');
         GoogleReverseLookup.setAddress();
         Forecast.getLatestWeather(Session.get('lat'),Session.get('lon'));
@@ -50,11 +50,32 @@ if (Meteor.isClient) {
         return false;
       },
       open: function () {
-        jQuery(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+        $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
       },
       close: function () {
         $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
       }
     });
+
+    $('#input').hover(function(){
+      $(this).autocomplete({source: function(request,response){
+        response(["apples","oranges","pears"]);
+      }});
+      $(this).autocomplete('search',' ');
+
+      $(this).click(function(){
+        $(this).autocomplete({source: function(request,response){
+          $.getJSON(baseURL + request.term, function (data) {
+            for (var i = 0; i < data.length; i++) {
+            searchRes[i] = data[i];
+            dataArr.push(data[i].display_name);
+            }
+          });
+          response(dataArr);
+          dataArr = [];
+          searchRes = {};
+        }});
+      });
+    },function(){});
   });
 }
