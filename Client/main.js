@@ -74,12 +74,15 @@ Forecast = {
         var current = data.currently;
         var daily = data.daily.data;
 
-        
-         Current.insert({ //refactor to .update instead of .insert
-            cityStateZip: Address.cityStateZip,
-        		apparentTemperature: round(current.apparentTemperature),
-        		icon: current.icon,
-        		summary: current.summary,
+        Current.insert({ //refactor to .update instead of .insert
+          cityStateZip: Address.cityStateZip,
+          temperature: round(current.temperature),
+      		apparentTemperature: round(current.apparentTemperature),
+          humidity: current.humidity,
+          windspeed: current.windSpeed,
+          visibility: current.visibility,
+        	icon: current.icon,
+        	summary: current.summary,
         });
 
         for (var i = 1; i < 5; i++) {
@@ -87,7 +90,9 @@ Forecast = {
             day: getCurrentDay(daily[i].time),
             icon: daily[i].icon,
             temperatureMin: round(daily[i].temperatureMin),
-            temperatureMax: round(daily[i].temperatureMax)
+            temperatureMax: round(daily[i].temperatureMax),
+            apparentTemperatureMin: round(daily[i].apparentTemperatureMin),
+            apparentTemperatureMax: round(daily[i].apparentTemperatureMax),
           });
         }    
     });

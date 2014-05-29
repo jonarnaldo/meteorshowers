@@ -1,45 +1,5 @@
-
-
 if (Meteor.isClient) {
-  /*Template.nav.events({
-    
-    'click #btn': function (){
-      
-      var stringToAddress = function(str) {
-        var strArr = str.split(" ");
-        var newStr = strArr.join("+");
-        return newStr;
-      }
-
-      Address.street = stringToAddress($('#street').val());
-      Address.city = stringToAddress($('#city').val());
-      Address.state = stringToAddress($('#state').val());
-      Address.zipcode = stringToAddress($('#zipcode').val());
-      
-      var url = "https://api.smartystreets.com/street-address?street=" + Address.street + "&city=" + Address.city + "&state=" + Address.state + "&zipcode=" + Address.zipcode + "&candidates=5&auth-token=3051264452507986245&callback=?"; 
-
-      if (Address.street == "") { alert("Please enter street address");}
-      else if (Address.city == "") {alert("Please enter city");}
-      else if (Address.state =="") {alert("Please enter state");}
-      else if (Address.zipcode =="") {alert("Please enter zipcode");}
-      else {
-        var jqxhr = $.getJSON(url, function(response) { 
-          if ($.isEmptyObject(response) === true) {
-            alert("address not found! Try Again!");
-          } else {
-            Address.latitude = response[0].metadata.latitude; //global var, move to main.js
-            Address.longitude = response[0].metadata.longitude; //global var, move to main.js
-            console.log("json lat/long: " + Address.latitude + ", " + Address.longitude);
-          }
-        })
-      }
-
-      Meteor.call('updateData');
-      console.log(Address.latitude, Address.longitude);
-      Forecast.getLatestWeather(Address.latitude, Address.longitude);
-    }
-  });
-  */
+  
   var dataArr = [];
   var searchRes = {};
   var baseURL = "http://nominatim.openstreetmap.org/search?format=json&limit=5&q=";

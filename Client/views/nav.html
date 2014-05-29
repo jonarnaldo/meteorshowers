@@ -1,16 +1,21 @@
 <template name = "nav">
+  <div class="container">
+  <div class="row top-buffer"></div>
   <div class="row">
     <div class="col-xs-4">
-      <h1>Meteor Showers</h1>
+      <h4>Meteor Showers</h4>
     </div>
     <div class="col-xs-8">
       <div class="liveaddress">
-        <input type="text" id="input">
+        <input type="text" id="input" placeholder="address">
       </div>
     </div>
   </div>
   <div class="row">
-    {{> weather}}
+    <div class="col-xs-12">
+      {{> weather}}
+    </div>
   </div>
   <div class="shower"></div> 
+</div>
 </template>

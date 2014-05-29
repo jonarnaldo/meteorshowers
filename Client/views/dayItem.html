@@ -1,12 +1,12 @@
  <template name="dayItem">
-	<div class="col-xs-3">
-    <div class="row">
-      <div class="col-xs-12 animated bounceInUp" id="day">
-        <div id="{{icon}}"><img src="{{icon}}.gif"></div>
+	<div class="col-xs-3 animated bounceInUp" id="day">
+        <img src="{{icon}}.gif" width="90px" height="90px">
         <h2>{{day}}</h2>
-        <h2>{{temperatureMax}} - {{temperatureMin}} °F</h2>
-      </div>
+        <div class="jumbo-m">{{temperatureMin}} - {{temperatureMax}} °F</div>
+        <span><h3>Feels like</h3></span>
+        <span>
+          <div class="jumbo-m">{{apparentTemperatureMin}} - {{apparentTemperatureMax}} °F</div>
+        </span>
     <div class="col-xs-3"></div>
-    </div>
   </div>
 </template>
