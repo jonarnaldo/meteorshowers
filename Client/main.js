@@ -82,8 +82,8 @@ if (Meteor.isClient) {
 
 Meteor.methods({
 
-  updateData: function () {
-    return Current.remove({}),Future.remove({}); //refactor to .update instead of remove
+  removeData: function () {
+    return Current.remove({}),Future.remove({}); 
   },
 
   insertCurrent: function (cityStateZip,obj) {
