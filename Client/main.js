@@ -19,7 +19,7 @@ GoogleReverseLookup = {
   setAddress: function () {
     var APIkey =  "AIzaSyDb7R_MQT2cX6vHsbFRoweKMiM9KvocxWM",
     URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + Address.lat + "," + Address.lon + "&sensor=true_or_false&key=";
-
+    console.log(URL);
     $.getJSON(URL + APIkey, function(data) {
         Address.cityStateZip = data.results[data.results.length-5].formatted_address;
       });
