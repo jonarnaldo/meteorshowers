@@ -22,26 +22,58 @@ if (Meteor.isClient) {
       }
     });      
   };
-/*
-  var searchAddress = {
-    lat: 0,
-    lon: 0,
-    display_name: {}
-  };
-*/
-  $(function () {
-    $('#input').hover(function () {
-      
-      $(this).autocomplete({source: function(request,response){
-         response(["Shanghai, Huangpu District, Shanghai, People's Republic of China","London, Greater London, England, United Kingdom"]); //this should be the address values of an array dervied from the Previous Collection
-      }});
-      $(this).autocomplete("search"," ");
 
+
+ 
+  $(function () {
+    $('#input').autocomplete({
+      source: function(request,response){
+        var prev = Session.get('previousSearch');
+        response([prev]);
+      },
+      delay: 500,
+      minLength: 1
+    }); //initialize
+
+    $('#input').hover(function(){
+    $(this).autocomplete('search'," ");
+
+    $(this).autocomplete({
+      source: function(request,response) {
+        var prev = Session.get('previousSearch');
+        response([prev]);
+      },
+      select: function(even,ui){
+        var prev = ui.item.value;
+        Session.set('previousSearch', prev);
+        console.log(ui.item.value);
+        Meteor.call('removeData');
+        Address.display_name = ui.item.label;
+        GetNominatim(Address.display_name);
+
+        Session.set('lat', Address.lat);
+        Session.set('lon', Address.lon);
+        GoogleReverseLookup.setAddress();
+        Forecast.getLatestWeather(Session.get('lat'),Session.get('lon'));
+
+        return false;
+      }
+    }); //on hover, show recent searches
+
+    $(this).click(function(){
       $(this).autocomplete({
-        select: function (event,ui) {
+        source: function(request,response){
+          GetNominatim(request.term);
+          response(DataArr);
+          DataArr = [];
+          SearchRes = {};
+        },
+        select: function(event,ui){
+          var prev = ui.item.value;
+          Session.set('previousSearch', prev);
+          console.log(ui.item.value);
           Meteor.call('removeData');
           Address.display_name = ui.item.label;
-          console.log("hover address: " + Address.display_name);
           GetNominatim(Address.display_name);
 
           Session.set('lat', Address.lat);
@@ -52,52 +84,10 @@ if (Meteor.isClient) {
           return false;
         }
       });
+    }); //on click, initialize search
 
-      $('#input').click(function(){
-        $(this).autocomplete({
-          source: function (request, response) {
-            GetNominatim(request.term);
-            response(DataArr); //supply display_name array to autocomplete pulldown
-            DataArr = [];  //clear dataArr after each search
-            //SearchRes = {}; //clear searRes after each search
-          },
-          minLength: 1,
-          
-          select: function (event, ui) {
-            Meteor.call('removeData');
-            Address.display_name = ui.item.label;
-            console.log('click address: ' + Address.display_name);
-            /*
-            for (var key in SearchRes) {
-              var obj = SearchRes[key];
-              for (var prop in obj) {
-                if (obj[prop] == Address.display_name) {
-                  Address.lat = obj.lat;
-                  Address.lon = obj.lon;
-                }
-              } 
-            }
-            */
-            
-            //console.log("address: " + Address.display_name + ", lat: " + Address.lat + ", lon: " + Address.lon);
-            Session.set('lat', Address.lat);
-            Session.set('lon', Address.lon);
-            GoogleReverseLookup.setAddress();
-            Forecast.getLatestWeather(Session.get('lat'),Session.get('lon'));
-
-            return false;
-          },
-          
-          open: function () {
-            $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-          },
-          close: function () {
-            $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-          }
-        });
-      });
-    }, function () { 
-      console.log('hover out'); 
+    },function(){
+     //hover out
     });
   });
 }
