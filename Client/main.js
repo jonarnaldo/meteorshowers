@@ -1,10 +1,11 @@
 Address = {
   display_name: "",
   cityStateZip: "",
-  zipcode: "999999",
-  lat: 37.785745,
-  lon: -122.395849
+  lat: 0,
+  lon: 0,
+  prev: "" 
 };
+
 
 Round = function (num) { 
   return Math.round(num);  
@@ -15,70 +16,82 @@ GetCurrentDay = function (unix) {
   return currentDateArr[0];
 };
 
-GoogleReverseLookup = {
-  setAddress: function () {
-    var APIkey =  "AIzaSyDb7R_MQT2cX6vHsbFRoweKMiM9KvocxWM",
-    URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + Address.lat + "," + Address.lon + "&sensor=true_or_false&key=";
-    console.log(URL);
-    $.getJSON(URL + APIkey, function(data) {
-        Address.cityStateZip = data.results[data.results.length-5].formatted_address;
-      });
+//------ Move above up go Global Object ----------//
+
+GetNominatim = function (stringval) {
+  var nomdeferred = Q.defer();  
+  var baseURL = "http://nominatim.openstreetmap.org/search?format=json&limit=3&q=";
+  Session.set('stringval', stringval);
+  $.getJSON(baseURL + stringval, nomdeferred.resolve);
+  return nomdeferred.promise;
+};
+
+//this is called after GetNominatim is resolved
+
+SetLatLon = function (data) { 
+  var searchRes = {}, dataArr = [];
+  for (var i = 0; i < data.length; i++) {
+    searchRes[i] = data[i];
+    dataArr.push(data[i].display_name);
+  }
+
+  Session.set('DataArr',dataArr); //for jquery autocomplete
+  Session.set('SearchRes',searchRes); 
+//break up into separate function
+  var currentSearch = Session.get('SearchRes');
+  var stringval = Session.get('stringval');
+  for (var key in currentSearch) {
+    var obj = currentSearch[key];
+    for (var prop in obj) {
+      if (obj[prop] == stringval) {
+        Session.set('lat', obj.lat);
+        Session.set('lon', obj.lon); 
+      }
+    } 
   }
 };
 
-/*
-myHue = {
-    username: "newdeveloper",
-    ip: "10.0.1.24",
-    id: "001788fffe11e541",
-    macAddress: "00:17:88:11:e5:41",
-    
-    lightSwitch: function (lightNum, onOff) {
-	    var url = 'http://' + myHue.ip + '/api/' + myHue.username + '/lights/' + lightNum + '/state';
-	    var params = {
-	      on: true,
-	    };
-
-	    $.ajax({
-	      type: "PUT",
-	      url: url,
-	      contentType: "application/json",
-	      data: JSON.stringify(params)
-	    });
-	}
-};
-
-buttonSwitch = function (e, num) {
-	var thisButton = e.currentTarget;
-	var switchVal = $(thisButton).attr('value');
-			
-	if (switchVal == 'true') {
-		myHue.lightSwitch(num, true);
-		$(thisButton).attr('value','false');
-	} else if (switchVal == 'false') {
-		myHue.lightSwitch(num, false);
-		$(thisButton).attr('value','true');
-	};       
-};
-*/
-
-if (Meteor.isClient) {
-  Forecast = {
-    getLatestWeather: function (latitude, longitude) {
-      var apiKey = "d1d066174bbcfed66db995ace8e1b671";
-      var url = "https://api.forecast.io/forecast/" + apiKey + "/" + latitude + "," + longitude + "?callback=?";
-
-      $.getJSON(url, function (data) {
-          var current = data.currently;
-          var daily = data.daily.data;
-
-          Meteor.call('insertCurrent',Address.cityStateZip, current);
-          Meteor.call('insertFuture', daily); 
-      });
-    }
-  };  
+//call after SetLatLon is resolved
+SetCoordinates = function (){
+  var currentSearch = Session.get('SearchRes');
+  var stringval = Session.get('stringval');
+  for (var key in currentSearch) {
+    var obj = currentSearch[key];
+    for (var prop in obj) {
+      if (obj[prop] == stringval) {
+        Session.set('lat', obj.lat);
+        Session.set('lon', obj.lon); 
+      }
+    } 
+  }
 }
 
+GoogleReverseLookup = {
+  setAddress: function () {
+    var googdeferred = Q.defer();
+
+
+    var lat = Session.get('lat');
+    var lon = Session.get('lon');
+    var APIkey =  "AIzaSyDb7R_MQT2cX6vHsbFRoweKMiM9KvocxWM",
+    URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&sensor=true_or_false&key=";
+
+    $.getJSON(URL + APIkey, googdeferred.resolve);
+    return googdeferred.promise;
+  }
+};
+
+if (Meteor.isClient) {
+  GetLatestWeather = function (latitude, longitude) {
+    var forecastdeferred = Q.defer();
+    var apiKey = "d1d066174bbcfed66db995ace8e1b671";
+    var url = "https://api.forecast.io/forecast/" + apiKey + "/" + latitude + "," + longitude + "?callback=?";
+    var current = {}, daily = {};
+
+    $.getJSON(url, forecastdeferred.resolve);
+    return forecastdeferred.promise;
+  }
+}; 
 
 Meteor.methods({
 
@@ -86,17 +99,19 @@ Meteor.methods({
     return Current.remove({}),Future.remove({}); 
   },
 
-  insertCurrent: function (cityStateZip,obj) {
-  
+  insertCurrent: function (obj,cityStateZip,lat,lon) {
+    
     Current.insert({
       cityStateZip: cityStateZip,
+      lat: lat,
+      lon: lon,
       temperature: Round(obj.temperature),
       apparentTemperature: Round(obj.apparentTemperature),
       humidity: obj.humidity,
-      windspeed: obj.windspeed,
+      windspeed: obj.windSpeed,
       visibility: obj.visibility,
       icon: obj.icon,
-      summary: obj.summary,      
+      summary: obj.summary,   
     });
   },
 
@@ -123,7 +138,43 @@ if (Meteor.isServer){
     return Future.find();
   });
 
-  Meteor.publish('previous', function(){
-    return Previous.find({},{ sort: { search: -1 }, limit: 3 });
-  });
+  //Meteor.publish('previous', function(){
+  //  return Previous.find({},{ sort: { search: -1 }, limit: 3 });
+  //});
 }
+
+/*
+myHue = {
+    username: "newdeveloper",
+    ip: "10.0.1.24",
+    id: "001788fffe11e541",
+    macAddress: "00:17:88:11:e5:41",
+    
+    lightSwitch: function (lightNum, onOff) {
+      var url = 'http://' + myHue.ip + '/api/' + myHue.username + '/lights/' + lightNum + '/state';
+      var params = {
+        on: true,
+      };
+
+      $.ajax({
+        type: "PUT",
+        url: url,
+        contentType: "application/json",
+        data: JSON.stringify(params)
+      });
+  }
+};
+
+buttonSwitch = function (e, num) {
+  var thisButton = e.currentTarget;
+  var switchVal = $(thisButton).attr('value');
+      
+  if (switchVal == 'true') {
+    myHue.lightSwitch(num, true);
+    $(thisButton).attr('value','false');
+  } else if (switchVal == 'false') {
+    myHue.lightSwitch(num, false);
+    $(thisButton).attr('value','true');
+  };       
+};
+*/

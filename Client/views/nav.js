@@ -1,93 +1,88 @@
 if (Meteor.isClient) {
-  
-  DataArr = []; //wrap this in Global Var
-  SearchRes = {}; //wrap this in Global Var
-
-  GetNominatim = function (stringval) {
-    var baseURL = "http://nominatim.openstreetmap.org/search?format=json&limit=5&q=";
-    $.getJSON(baseURL + stringval, function (data) {
-      for (var i = 0; i < data.length; i++) {
-        SearchRes[i] = data[i];
-        DataArr.push(data[i].display_name);
-      }
-    
-      for (var key in SearchRes) {
-        var obj = SearchRes[key];
-        for (var prop in obj) {
-          if (obj[prop] == Address.display_name) {
-            Address.lat = obj.lat;
-            Address.lon = obj.lon;
-          }
-        } 
-      }
-    });      
-  };
-
-
  
-  $(function () {
-    $('#input').autocomplete({
-      source: function(request,response){
-        var prev = Session.get('previousSearch');
-        response([prev]);
-      },
-      delay: 500,
-      minLength: 1
-    }); //initialize
+  Template.nav.events({
 
-    $('#input').hover(function(){
-    $(this).autocomplete('search'," ");
-
-    $(this).autocomplete({
-      source: function(request,response) {
-        var prev = Session.get('previousSearch');
-        response([prev]);
-      },
-      select: function(even,ui){
-        var prev = ui.item.value;
-        Session.set('previousSearch', prev);
-        console.log(ui.item.value);
-        Meteor.call('removeData');
-        Address.display_name = ui.item.label;
-        GetNominatim(Address.display_name);
-
-        Session.set('lat', Address.lat);
-        Session.set('lon', Address.lon);
-        GoogleReverseLookup.setAddress();
-        Forecast.getLatestWeather(Session.get('lat'),Session.get('lon'));
-
-        return false;
-      }
-    }); //on hover, show recent searches
-
-    $(this).click(function(){
-      $(this).autocomplete({
+    //user should activate after they press enter to submit search
+    
+    'mouseover #input': function () {
+      $('#input').autocomplete({
         source: function(request,response){
-          GetNominatim(request.term);
-          response(DataArr);
-          DataArr = [];
-          SearchRes = {};
+          response(Address.prev);
+        },
+        delay: 0,
+        minLength: 4
+      });
+
+      $('#input').autocomplete('search'," ");
+
+      $('#input').autocomplete({
+        source: function(request,response) {
+          response(Address.prev);
+        },
+        select: function(even,ui){
+          Session.set('previousSearch', ui);
+          console.log('autocomplete hover: ' + ui.item.value);
+          Address.display_name = ui.item.label;
+
+          GetNominatim(Session.get('currentSearch')).then(function(data){
+            SetLatLon(data);
+            SetCoordinates();
+          }).then(function() {
+            return GoogleReverseLookup.setAddress();
+          }).then(function(googData){
+            Session.set('cityStateZip',googData.results[4].formatted_address);
+          }).then(function() {
+            Address.cityStateZip = Session.get('cityStateZip');
+            Address.lat = Session.get('lat');
+            Address.lon = Session.get('lon');
+            Meteor.call('removeData');
+            return GetLatestWeather(Session.get('lat'),Session.get('lon'));
+          }).then(function(weatherData){
+            Meteor.call('insertCurrent',weatherData.currently,Session.get('cityStateZip'),Session.get('lat'),Session.get('lon'));
+            Meteor.call('insertFuture', weatherData.daily.data);
+          }).done();
+          $(this).val('');
+          return false;
+        }
+          
+      });
+    }, 
+
+    'click #input': function () {
+      console.log('clicked');
+      $('#input').autocomplete({
+        source: function(request,response){
+          GetNominatim(request.term).then(function(data){
+            SetLatLon(data);
+          }).then(function(){
+            response(Session.get('DataArr'));
+          }).done();           
         },
         select: function(event,ui){
-          var prev = ui.item.value;
-          Session.set('previousSearch', prev);
-          console.log(ui.item.value);
-          Meteor.call('removeData');
-          Address.display_name = ui.item.label;
-          GetNominatim(Address.display_name);
+          Address.prev = ('previousSearch', ui);
+          Session.set('currentSearch', ui.item.label);
 
-          Session.set('lat', Address.lat);
-          Session.set('lon', Address.lon);
-          GoogleReverseLookup.setAddress();
-          Forecast.getLatestWeather(Session.get('lat'),Session.get('lon'));
-
+          GetNominatim(Session.get('currentSearch')).then(function(data){
+            SetLatLon(data);
+            SetCoordinates();
+          }).then(function() {
+            return GoogleReverseLookup.setAddress();
+          }).then(function(googData){
+            Session.set('cityStateZip',googData.results[4].formatted_address);
+          }).then(function() {
+            Address.cityStateZip = Session.get('cityStateZip');
+            Address.lat = Session.get('lat');
+            Address.lon = Session.get('lon');
+            Meteor.call('removeData');
+            return GetLatestWeather(Session.get('lat'),Session.get('lon'));
+          }).then(function(weatherData){
+            Meteor.call('insertCurrent',weatherData.currently,Session.get('cityStateZip'),Session.get('lat'),Session.get('lon'));
+            Meteor.call('insertFuture', weatherData.daily.data);
+          }).done();
+          $(this).val('');
           return false;
         }
       });
-    }); //on click, initialize search
-
-    },function(){
-     //hover out
-    });
-  });
-}
+    }
+  }); 
+} 

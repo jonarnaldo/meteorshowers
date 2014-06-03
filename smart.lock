@@ -5,7 +5,8 @@
       "bootstrap-3": {},
       "iron-router": {},
       "jquery-color-animation": {},
-      "jquery-ui-bootstrap": {}
+      "jquery-ui-bootstrap": {},
+      "q": {}
     },
     "packages": {
       "bootstrap-3": {
@@ -27,6 +28,11 @@
         "git": "https://github.com/TimHeckel/meteor-jquery-ui-bootstrap.git",
         "tag": "v0.1.2",
         "commit": "fa742a85639307003e105898e15b631394b63509"
+      },
+      "q": {
+        "git": "https://github.com/frozeman/q-meteor.git",
+        "tag": "v0.9.7",
+        "commit": "e5c10f087b76fda32ae6be4d8950ab2633c520a3"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
