@@ -65,22 +65,53 @@ MS = {
     return forecastdeferred.promise;
   },
   updateCurrent: function() {
-    return function(callback){
+    return function(func){
       var buffer = null;
       buffer = Current.find({}).fetch();
-      callback(buffer);
+      func(buffer);
+    }
+  },
+  //supply array of previous searches to autosearch
+  previousSearch: function() {
+    return function(func){
+      var buffer = null;
+      buffer = Previous.find({},{ sort: { search: -1 }, limit: 3 });
+      func(buffer);
     }
   }
 };
 
+
+//on startup refresh previous location weather
 if (Meteor.isClient) {
   Meteor.startup(function(){
     Deps.autorun(function() {
       console.log('Meteorshowers start up');
-      var foo = MS.updateCurrent();
-      foo(function(data){ console.log(data); });
+      var currentLocation = MS.updateCurrent();
+      currentLocation(function (data){ 
+        console.log('Mongo DB updated')
+        console.log(data);
+        if (data.length <= 0) {
+          console.log('no data');
+        } else {
+          var lat = data[0].lat;
+          var lon = data[0].lon;
+          var cityStateZip = data[0].cityStateZip;
+          console.log('onload data to consume: ' + lat, lon, cityStateZip);
+        }
+      });
     });
-  });
+  
+    MS.GetLatestWeather(lat,lon).then(function(weatherData){
+    Meteor.call('removeData');
+    return weatherData;
+    }).then(function(weatherData){
+      Meteor.call('insertCurrent', weatherData.currently, cityStateZip, lat, lon);
+      Meteor.call('insertFuture', weatherData.data);
+    }).done();
+
+
+  }); 
 }
 
 Meteor.methods({
