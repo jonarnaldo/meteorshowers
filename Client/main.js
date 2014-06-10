@@ -64,14 +64,13 @@ MS = {
     $.getJSON(url, forecastdeferred.resolve);
     return forecastdeferred.promise;
   },
-  updateCurrent: function() {
-    return function(func){
-      var buffer = null;
-      buffer = Current.find({}).fetch();
-      func(buffer);
-    }
-  },
-  //supply array of previous searches to autosearch
+  updateCurrent: function(func) {
+      var data = null;
+      arr = Current.find({}).fetch();
+      return func(arr);
+  }
+  /*
+  supply array of previous searches to autosearch
   previousSearch: function() {
     return function(func){
       var buffer = null;
@@ -79,40 +78,39 @@ MS = {
       func(buffer);
     }
   }
+  */
 };
 
-
-//on startup refresh previous location weather
-if (Meteor.isClient) {
+if(Meteor.isClient){
   Meteor.startup(function(){
-    Deps.autorun(function() {
-      console.log('Meteorshowers start up');
-      var currentLocation = MS.updateCurrent();
-      currentLocation(function (data){ 
-        console.log('Mongo DB updated')
-        console.log(data);
-        if (data.length <= 0) {
-          console.log('no data');
-        } else {
-          var lat = data[0].lat;
-          var lon = data[0].lon;
-          var cityStateZip = data[0].cityStateZip;
-          console.log('onload data to consume: ' + lat, lon, cityStateZip);
+    var currentInfo = function () {
+      var timeoutDefer = Q.defer();
+    
+      Meteor.setTimeout(function(){
+        if (Meteor.status().status === "connected") {
+          timeoutDefer.resolve('ok');
+          var data = Current.find().fetch()[0];
+          Session.set('lat', data.lat);
+          Session.set('lon', data.lon);
+          Session.set('cityStateZip', data.cityStateZip);
         }
-      });
-    });
-  
-    MS.GetLatestWeather(lat,lon).then(function(weatherData){
-    Meteor.call('removeData');
-    return weatherData;
-    }).then(function(weatherData){
-      Meteor.call('insertCurrent', weatherData.currently, cityStateZip, lat, lon);
-      Meteor.call('insertFuture', weatherData.data);
+      }, 1000);  
+      return timeoutDefer.promise;
+    };
+       
+
+    /*insert promise here to give lat, lon, cityStateZip to MS.GetLatestWeather*/
+    currentInfo().then(function(){
+      MS.GetLatestWeather(Session.get('lat'), Session.get('lon')).then(function(data){
+        Meteor.call('removeData');
+        var lat = Session.get('lat'), lon = Session.get('lon'), cityStateZip = Session.get('cityStateZip');
+        Meteor.call('insertCurrent', data.currently, cityStateZip, lat, lon);
+        Meteor.call('insertFuture', data.daily.data);
+      })
     }).done();
-
-
-  }); 
+  });
 }
+
 
 Meteor.methods({
 
@@ -150,7 +148,12 @@ Meteor.methods({
         precipProbability: dailyArr[i].precipProbability,
       });
     }    
+  },
+
+  getCurrent: function(){
+    console.log(Current.find().fetch());
   }
+
 });
 
 if (Meteor.isServer){
