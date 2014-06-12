@@ -68,21 +68,16 @@ MS = {
       var data = null;
       arr = Current.find({}).fetch();
       return func(arr);
+  },
+  GetMap: function (latitude, longitude) {
+    var url = 'http://maps.googleapis.com/maps/api/staticmap?size=200x200&maptype=roadmap\&markers=size:mid%7Ccolor:red%7C' + latitude + ',' + longitude;
+    return url;
   }
-  /*
-  supply array of previous searches to autosearch
-  previousSearch: function() {
-    return function(func){
-      var buffer = null;
-      buffer = Previous.find({},{ sort: { search: -1 }, limit: 3 });
-      func(buffer);
-    }
-  }
-  */
 };
 
 if(Meteor.isClient){
   Meteor.startup(function(){
+    console.log('Meteor startup');
     var currentInfo = function () {
       var timeoutDefer = Q.defer();
     
@@ -104,8 +99,10 @@ if(Meteor.isClient){
       MS.GetLatestWeather(Session.get('lat'), Session.get('lon')).then(function(data){
         Meteor.call('removeData');
         var lat = Session.get('lat'), lon = Session.get('lon'), cityStateZip = Session.get('cityStateZip');
+        console.log('refresh data');
         Meteor.call('insertCurrent', data.currently, cityStateZip, lat, lon);
         Meteor.call('insertFuture', data.daily.data);
+        console.log('map loaded');
       })
     }).done();
   });
@@ -132,6 +129,7 @@ Meteor.methods({
       icon: obj.icon,
       summary: obj.summary,
       precipProbability: obj.precipProbability,
+      map: MS.GetMap(lat,lon)
     });
   },
 

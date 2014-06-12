@@ -6,7 +6,8 @@
       "iron-router": {},
       "jquery-color-animation": {},
       "jquery-ui-bootstrap": {},
-      "q": {}
+      "q": {},
+      "googlemaps": {}
     },
     "packages": {
       "bootstrap-3": {
@@ -33,6 +34,11 @@
         "git": "https://github.com/frozeman/q-meteor.git",
         "tag": "v0.9.7",
         "commit": "e5c10f087b76fda32ae6be4d8950ab2633c520a3"
+      },
+      "googlemaps": {
+        "git": "https://github.com/drewjw81/meteor-googlemaps.git",
+        "tag": "v0.0.2",
+        "commit": "da8785c82cfd7de0111f898ef10728e7ed24e361"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

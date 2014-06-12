@@ -30,7 +30,7 @@ if (Meteor.isClient) {
 
             MS.GetNominatim(Session.get('currentSearch')).then(function(data){
                 MS.SetLatLon(data);
-                MS.SetCoordinates();
+                MS.SetCoordinates(); //Session lat and lon are set
               }).then(function() {
                 return MS.GoogleReverseLookup();
               }).then(function(googData){

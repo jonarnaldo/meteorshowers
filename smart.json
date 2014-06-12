@@ -4,6 +4,7 @@
     "iron-router": {},
     "jquery-color-animation": {},
     "jquery-ui-bootstrap": {},
-    "q": {}
+    "q": {},
+    "googlemaps": {}
   }
 }
