@@ -34,7 +34,7 @@ if (Meteor.isClient) {
               }).then(function() {
                 return MS.GoogleReverseLookup();
               }).then(function(googData){
-                Session.set('cityStateZip',googData.results[4].formatted_address);
+                Session.set('cityStateZip',googData.results[1].formatted_address);
               }).then(function() {
                 MS.Address.cityStateZip = Session.get('cityStateZip');
                 MS.Address.lat = Session.get('lat');

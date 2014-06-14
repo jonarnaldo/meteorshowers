@@ -4,48 +4,34 @@
       <div class="row animated bounceInUp">
         <div class="col-xs-12">
           <h1>{{cityStateZip}}</h1>
-          <h3>{{summary}}</h3>
+          <hr>
         </div>
       </div>
       <div class="row animated bounceInUp">
-        <div class="col-xs-4 col-lg-4">
+        <div class="col-xs-3 col-md-3 col-lg-2">
           <img src="{{icon}}.gif">
+          <div class="jumbo-m">{{temperature}}°</div>
+          <h4>{{summary}}</h4>
         </div>
-        <div class="col-xs-4 col-lg-4">
+        <div class="col-xs-9 col-md-9 col-lg-5">      
+          <div id="map-canvas" style="background-image: url({{map}}); width: 400px; height:300px"></div>
+        </div>
+        <div class="col-xs-0 col-md-0 col-lg-5">
           <div class="row">
-            <div class="col=xs=12">
-              <div class="row">
-                <div class="col-xs-7">
-                  <div class="jumbo">{{temperature}}</div>
-                </div>
-                <div class="col-xs-5">
-                  <h1>°F</h1>
-                </div>
-              </div>
+            <div class="col-xs-6">
+              <h4>humidity: {{humidity}}%</h4>
+              <h4>windspeed: {{windspeed}} mph</h4>
+              <h4>feels like: {{apparentTemperature}} °F</h4>
+            </div>
+            <div class="col-xs-6">
+              <h4>visibility: {{visibility}} mi</h4> 
+              <h4>rain probability: {{precipProbability}}%</h4>
             </div>
           </div>
         </div>
-        <div class="col-xs-4 col-lg-4">      
-          <div class="row animated bounceInUp">
-            <div class="col-xs-12">
-              <div id="map-canvas" style="background-image: url({{map}}); width: 100%; height:200px">map</div>
-            </div>
-          </div>
-        </div>  
       </div>
-      <div class="row top-buffer"></div>
       <div class="row animated bounceInUp">
-        <div class="col-xs-4 col-md-4 col-lg-4">
-          <h4>humidity: {{humidity}}%</h4>
-          <h4>windspeed: {{windspeed}} mph</h4>
-        </div>
-        <div class="col-xs-4 col-md-4 col-lg-4">
-          <h4>feels like: {{apparentTemperature}} °F</h4>
-          <h4>visibility: {{visibility}} mi</h4>          
-        </div>
-        <div class="col-xs-4 col-md-4 col-lg-4">        
-          <h4>rain probability: {{precipProbability}}%</h4>
-        </div>        
+        <hr>
       </div>
     {{/each}}
   </div>

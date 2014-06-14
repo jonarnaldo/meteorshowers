@@ -70,7 +70,7 @@ MS = {
       return func(arr);
   },
   GetMap: function (latitude, longitude) {
-    var url = 'http://maps.googleapis.com/maps/api/staticmap?size=200x200&maptype=roadmap\&markers=size:mid%7Ccolor:red%7C' + latitude + ',' + longitude;
+    var url = 'http://maps.googleapis.com/maps/api/staticmap?size=500x300&scale=1&zoom=13&maptype=roadmap\&markers=size:large|color:red|' + latitude + ',' + longitude;
     return url;
   }
 };
