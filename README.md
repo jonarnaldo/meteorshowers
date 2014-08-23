@@ -33,8 +33,8 @@ Description: Gets latest weather data from supllied lat. and long. coordinates
 
 ###Collections
 - Current<br>
-Description: Most current weather data given a certain lat. and long.
-Ex.
+Description: Most current weather data given a certain lat. and long.<br>
+Exampele:
 ```
     Current.insert({
       cityStateZip: cityStateZip,
@@ -52,7 +52,8 @@ Ex.
       });
 ```
 - Future<br>
-Description: Most current weather prediction data for the proceeding four days
+Description: Most current weather prediction data for the proceeding four days<br>
+Example:
 ````
       Future.insert({  //refactor to .update instead of .insert
         day: MS.GetCurrentDay(dailyArr[i].time),
