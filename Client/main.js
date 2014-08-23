@@ -171,9 +171,9 @@ if (Meteor.isServer){
 /*
 myHue = {
     username: "newdeveloper",
-    ip: "10.0.1.24",
-    id: "001788fffe11e541",
-    macAddress: "00:17:88:11:e5:41",
+    ip: "",
+    id: "",
+    macAddress: "",
     
     lightSwitch: function (lightNum, onOff) {
       var url = 'http://' + myHue.ip + '/api/' + myHue.username + '/lights/' + lightNum + '/state';
