@@ -25,7 +25,7 @@ Use: Used in conjunction with jquery autocomplete widget to supply users with av
 Description: Gets object of available addresses based on a given lat,lon
 Use: Find closest match based on lat. and long. to be displayed
 
-- [Google Maps](https://developers.google.com/maps/documentation/staticmaps/)
+- [Google Maps](https://developers.google.com/maps/documentation/staticmaps/)<br>
 Description: Gets image from google maps from supplied lat. and long. coordinates
 
 - [Forecast.io](https://developer.forecast.io/)<br>
