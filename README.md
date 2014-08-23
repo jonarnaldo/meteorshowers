@@ -1,3 +1,8 @@
+#Meteorshowers
+
+###What is it?
+A weather app powered by the Meteor framework!
+
 ###What's under the hood?<br>
 - [the Meteor framework](https://www.meteor.com/)
 - [jquery](http://jquery.com/)
