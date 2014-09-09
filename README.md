@@ -18,11 +18,11 @@ A weather app powered by the Meteor framework! You can try the app here:  http:/
 ###API's
 
 - [Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim)<br>
-Description: Gets object of all available lat and lon for specified search<br>
+Description: Gets object of all available lat. and long. for specified search<br>
 Use: Used in conjunction with jquery autocomplete widget to supply users with available addresses
 
 - [Google Reverse Geocoding (Address Lookup)](https://developers.google.com/maps/documentation/geocoding/)<br>
-Description: Gets object of available addresses based on a given lat,lon
+Description: Gets object of available addresses based on a given lat.,long.<br>
 Use: Find closest match based on lat. and long. to be displayed
 
 - [Google Maps](https://developers.google.com/maps/documentation/staticmaps/)<br>
@@ -34,7 +34,7 @@ Description: Gets latest weather data from supllied lat. and long. coordinates
 ###Collections
 - Current<br>
 Description: Most current weather data given a certain lat. and long.<br>
-Exampele:
+Example:
 ```
     Current.insert({
       cityStateZip: cityStateZip,
