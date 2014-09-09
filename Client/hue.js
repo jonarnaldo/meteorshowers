@@ -21,9 +21,9 @@ if (Meteor.isClient){
 
 myHue = {
     username: "newdeveloper",
-    ip: "10.0.1.24",
-    id: "001788fffe11e541",
-    macAddress: "00:17:88:11:e5:41"
+    ip: //ip address goes here,
+    id: //id goes here,
+    macAddress: //madAddress goes here
 
 };
 
