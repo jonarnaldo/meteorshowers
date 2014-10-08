@@ -68,7 +68,6 @@ Example:
 ````
 
 ###What's next?<br>
--  Rewrite using Underscore.js
 -  Implement [HUE](http://www2.meethue.com/) API<br>
 There's currently a working HUE API commented out.  Thinking about using Fitbit or some other sensor to turn lights on and off based on sleeping patterns as well as convey weather based on colors.
 
